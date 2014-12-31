@@ -33,6 +33,27 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    public class ScreenReceiver extends BroadcastReceiver {
+
+        private boolean screenOff;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                screenOff = true;
+            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                screenOff = false;
+            }
+            /*
+            Intent i = new Intent(context, DataService.class);
+            i.putExtra("screen_state", screenOff);
+            context.startService(i);
+            */
+            Log.d(TAG, "ScreenOff:" + screenOff);
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +61,11 @@ public class MainActivity extends ActionBarActivity {
         service= new Intent(this, DataService.class);
         startService(service);
         registerReceiver(broadcastReceiver, new IntentFilter(DataService.BROADCAST_ACTION));
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        BroadcastReceiver mReceiver = new ScreenReceiver();
+        registerReceiver(mReceiver, filter);
 
     }
 

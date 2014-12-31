@@ -24,14 +24,16 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/textWatt"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_3_material" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/textWatt"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_3_material" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

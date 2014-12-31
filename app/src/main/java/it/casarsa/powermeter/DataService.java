@@ -27,8 +27,12 @@ import org.json.JSONObject;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
@@ -46,6 +50,9 @@ public class DataService extends Service {
     NotificationManager mNotifyMgr;
     NotificationCompat.Builder mBuilder;
     public static String BROADCAST_ACTION = "it.casarsa.powerMeter";
+
+    BroadcastReceiver mReceiver;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "Service started");
@@ -70,6 +77,7 @@ public class DataService extends Service {
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
 
+
         return Service.START_STICKY;
     }
 
@@ -85,14 +93,21 @@ public class DataService extends Service {
                     // data initialization
                     int i = 0;
                     while (true) {
-                        String updatesUrl = "http://192.168.99.10:3000";
-                        String request = getDataFromWebService(updatesUrl);
-                        publishProgress(request);
-                        SystemClock.sleep(5000);
+                        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                        if (mWifi.isConnected()) {
+                            String updatesUrl = "http://192.168.99.10:3000";
+                            String request = getDataFromWebService(updatesUrl);
+                            publishProgress(request);
+                            SystemClock.sleep(5000);
+                        } else {
+                            Log.d(TAG, "Wifi is off");
+                            publishProgress();
+                            SystemClock.sleep(5000);
+                        }
                     }
-
                 } catch (Exception e) {
-                    SystemClock.sleep(2000);
+                    SystemClock.sleep(10000);
                     publishProgress();
                 }
             }
@@ -113,6 +128,9 @@ public class DataService extends Service {
                 mNotifyMgr.notify(
                         mNotificationId,
                         mBuilder.build());
+            } else {
+                // no data means error so remove notification
+                mNotifyMgr.cancel(mNotificationId);
             }
 
 
@@ -179,13 +197,15 @@ public class DataService extends Service {
 
     @Override
     public void onCreate() {
-
+        Log.d(TAG, "on Create");
     };
 
     @Override
     public void onDestroy() {
-
+        Log.d(TAG, "on Destroy");
     }
+
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
