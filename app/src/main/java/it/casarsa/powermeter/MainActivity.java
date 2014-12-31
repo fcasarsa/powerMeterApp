@@ -22,6 +22,8 @@ public class MainActivity extends ActionBarActivity {
 
     String TAG="powerMeter";
     Intent service;
+    IntentFilter screenFilter;
+
 
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -33,8 +35,7 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    public class ScreenReceiver extends BroadcastReceiver {
-
+    private BroadcastReceiver screenReceiver = new BroadcastReceiver() {
         private boolean screenOff;
 
         @Override
@@ -51,8 +52,8 @@ public class MainActivity extends ActionBarActivity {
             */
             Log.d(TAG, "ScreenOff:" + screenOff);
         }
+    };
 
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,9 @@ public class MainActivity extends ActionBarActivity {
         startService(service);
         registerReceiver(broadcastReceiver, new IntentFilter(DataService.BROADCAST_ACTION));
 
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        BroadcastReceiver mReceiver = new ScreenReceiver();
-        registerReceiver(mReceiver, filter);
+        screenFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        screenFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(screenReceiver, screenFilter);
 
     }
 
@@ -77,6 +77,7 @@ public class MainActivity extends ActionBarActivity {
         Log.d(TAG,"onPause");
         stopService(service);
         unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(screenReceiver);
     }
 
     @Override
@@ -85,6 +86,7 @@ public class MainActivity extends ActionBarActivity {
         Log.d(TAG, "onResume");
         startService(service);
         registerReceiver(broadcastReceiver, new IntentFilter(DataService.BROADCAST_ACTION));
+        registerReceiver(screenReceiver, new IntentFilter(screenFilter));
 
     }
 

@@ -24,7 +24,7 @@ public class PowerData implements Parcelable {
 
     // constructor
     public PowerData (String json) {
-        decimalFormat.applyLocalizedPattern("#0.0");
+        decimalFormat.applyLocalizedPattern("###.##0");
 
         try {
             JSONObject powerDataJson = new JSONObject(json);

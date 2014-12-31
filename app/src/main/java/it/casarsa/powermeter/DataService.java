@@ -51,8 +51,6 @@ public class DataService extends Service {
     NotificationCompat.Builder mBuilder;
     public static String BROADCAST_ACTION = "it.casarsa.powerMeter";
 
-    BroadcastReceiver mReceiver;
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "Service started");
@@ -122,7 +120,7 @@ public class DataService extends Service {
                 Log.d(TAG, "Background service results" + item[0]);
                 PowerData powerData = new PowerData(item[0]);
                 intent.putExtra("powerData", powerData);
-                mBuilder.setContentText(powerData.getWattText()+"W  " + powerData.getPowerFactorText());
+                mBuilder.setContentText(powerData.getWattText() + "W ");
                 // Because the ID remains unchanged, the existing notification is
                 // updated.
                 mNotifyMgr.notify(
