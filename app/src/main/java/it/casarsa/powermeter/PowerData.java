@@ -24,7 +24,6 @@ public class PowerData implements Parcelable {
 
     // constructor
     public PowerData (String json) {
-        decimalFormat.applyLocalizedPattern("###.##0");
 
         try {
             JSONObject powerDataJson = new JSONObject(json);
@@ -55,11 +54,38 @@ public class PowerData implements Parcelable {
     }
 
     public String getWattText () {
-        return decimalFormat.format(this.watt);
+        decimalFormat.applyLocalizedPattern("###.##0");
+        return
+                decimalFormat.format(this.watt);
+    }
+
+    public String getVoltAmpereText() {
+        decimalFormat.applyLocalizedPattern("###.##0");
+        return
+                decimalFormat.format(this.voltAmpere);
+    }
+
+    public String getAmpereText() {
+        decimalFormat.applyLocalizedPattern("##0,###");
+        return
+                decimalFormat.format(this.ampere);
+    }
+
+    public String getVoltText() {
+        decimalFormat.applyLocalizedPattern("##0");
+        return
+                decimalFormat.format(this.volt);
+    }
+
+    public String getCosFiText() {
+        decimalFormat.applyLocalizedPattern("##0");
+        return
+                decimalFormat.format(this.cosFi);
     }
 
     public String getPowerFactorText () {
-        return decimalFormat.format(this.powerFactor);
+        decimalFormat.applyLocalizedPattern("##0");
+        return decimalFormat.format(this.powerFactor * 100) + "%";
     }
 
     @Override

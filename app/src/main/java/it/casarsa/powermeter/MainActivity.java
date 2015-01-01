@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.net.DatagramSocket;
@@ -30,8 +31,13 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             PowerData powerData = extras.getParcelable("powerData");
-            TextView text = (TextView) findViewById(R.id.textWatt);
-            text.setText(powerData.getWattText());
+            ((TextView) findViewById(R.id.textWatt)).setText(powerData.getWattText());
+            ((TextView) findViewById(R.id.textVolt)).setText(powerData.getVoltText());
+            ((TextView) findViewById(R.id.textAmpere)).setText(powerData.getAmpereText());
+            ((TextView) findViewById(R.id.textVoltAmpere)).setText(powerData.getVoltAmpereText());
+            ((TextView) findViewById(R.id.textPowerFactor)).setText(powerData.getPowerFactorText());
+            ((TextView) findViewById(R.id.textCosFi)).setText(powerData.getCosFiText());
+
         }
     };
 
@@ -66,6 +72,11 @@ public class MainActivity extends ActionBarActivity {
         screenFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         screenFilter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(screenReceiver, screenFilter);
+
+        // keep screen on while in foreground:
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 
     }
 

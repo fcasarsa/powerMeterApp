@@ -3,6 +3,11 @@
 
     <string name="app_name">Power Meter</string>
     <string name="action_settings">Settings</string>
+    <string name="textVolt">V</string>
     <string name="textWatt">Watt</string>
+    <string name="textAmpere">A</string>
+    <string name="textPowerFactor">FP</string>
+    <string name="textCosFi">CosFi</string>
+    <string name="textVoltAmpere">VA</string>
 
 </resources>

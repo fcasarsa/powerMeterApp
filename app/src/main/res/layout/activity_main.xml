@@ -17,9 +17,9 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <TextView
+        <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -35,5 +35,116 @@
                 android:layout_weight="1"
                 android:textSize="@dimen/abc_text_size_display_3_material" />
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/textAmpere"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textAmpere"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/textVolt"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textVolt"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/textVoltAmpere"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textVoltAmpere"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/textCosFi"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textCosFi"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/textPowerFactor"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/textPowerFactor"
+                android:layout_weight="1"
+                android:textSize="@dimen/abc_text_size_display_2_material" />
+        </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>
