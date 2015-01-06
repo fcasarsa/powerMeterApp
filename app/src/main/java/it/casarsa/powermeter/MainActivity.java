@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -30,14 +31,18 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
+            if (intent.hasExtra("powerData")) {
             PowerData powerData = extras.getParcelable("powerData");
-            ((TextView) findViewById(R.id.textWatt)).setText(powerData.getWattText());
-            ((TextView) findViewById(R.id.textVolt)).setText(powerData.getVoltText());
-            ((TextView) findViewById(R.id.textAmpere)).setText(powerData.getAmpereText());
-            ((TextView) findViewById(R.id.textVoltAmpere)).setText(powerData.getVoltAmpereText());
-            ((TextView) findViewById(R.id.textPowerFactor)).setText(powerData.getPowerFactorText());
-            ((TextView) findViewById(R.id.textCosFi)).setText(powerData.getCosFiText());
 
+                ((TextView) findViewById(R.id.textWatt)).setText(powerData.getWattText());
+                ((TextView) findViewById(R.id.textVolt)).setText(powerData.getVoltText());
+                ((TextView) findViewById(R.id.textAmpere)).setText(powerData.getAmpereText());
+                ((TextView) findViewById(R.id.textVoltAmpere)).setText(powerData.getVoltAmpereText());
+                ((TextView) findViewById(R.id.textPowerFactor)).setText(powerData.getPowerFactorText());
+                ((TextView) findViewById(R.id.textCosFi)).setText(powerData.getCosFiText());
+            } else {
+                Toast.makeText(context, "null data", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 

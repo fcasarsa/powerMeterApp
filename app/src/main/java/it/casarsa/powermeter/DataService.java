@@ -77,7 +77,7 @@ public class DataService extends Service {
                         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                         if (mWifi.isConnected()) {
-                            String updatesUrl = "http://192.168.99.10:3000";
+                            String updatesUrl = "http://192.168.99.12:3000";
                             String request = getDataFromWebService(updatesUrl);
                             publishProgress(request);
                             SystemClock.sleep(5000);
@@ -88,6 +88,7 @@ public class DataService extends Service {
                         }
                     }
                 } catch (Exception e) {
+                    Log.e(TAG, e.getLocalizedMessage());
                     SystemClock.sleep(10000);
                     publishProgress();
                 }
