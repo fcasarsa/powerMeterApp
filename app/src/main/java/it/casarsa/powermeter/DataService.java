@@ -56,24 +56,7 @@ public class DataService extends Service {
         Log.i(TAG, "Service started");
         new backGroundReceiver().execute();
         // build notification
-         mBuilder =
-                new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.lightning_icon)
-                        .setContentTitle("Power")
-                        .setContentText("initializing");
 
-        Intent resultIntent = new Intent(this, MainActivity.class);
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
 
 
         return Service.START_STICKY;
@@ -169,7 +152,7 @@ public class DataService extends Service {
     public String downloadData() {
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet("http://192.168.99.10:3000");
+        HttpGet httpGet = new HttpGet("http://192.168.99.12:3000");
         try {
             HttpResponse response = client.execute(httpGet);
             StatusLine statusLine = response.getStatusLine();
@@ -195,7 +178,25 @@ public class DataService extends Service {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "on Create");
+        Log.d(TAG, "Service Create");
+        mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.lightning_icon)
+                        .setContentTitle("Power")
+                        .setContentText("initializing");
+
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        mNotifyMgr =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     };
 
     @Override
