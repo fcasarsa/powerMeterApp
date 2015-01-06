@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="updateFrequency">
+        <item name="5">5s</item>
+        <item name="10">10s</item>
+        <item name="30">30s</item>
+        <item name="60">1m</item>
+    </string-array>
+    <string-array name="updateFrequencyValues">
+        <item name="5">5</item>
+        <item name="10">10</item>
+        <item name="30">30</item>
+        <item name="60">60</item>
+    </string-array>
+
+</resources>

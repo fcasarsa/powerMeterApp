@@ -116,6 +116,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        final int SETTINGS_RESULT = 1;
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -123,6 +125,9 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getApplicationContext(), UserSettingActivity.class);
+            startActivityForResult(i, SETTINGS_RESULT);
             return true;
         }
 
