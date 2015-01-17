@@ -23,17 +23,16 @@ public class PowerData implements Parcelable {
     DecimalFormat decimalFormat = new DecimalFormat();
 
     // constructor
-    public PowerData (String json) {
+    public PowerData(String json) {
 
         try {
             JSONObject powerDataJson = new JSONObject(json);
             this.watt = powerDataJson.getDouble("W");
             this.ampere = powerDataJson.getDouble("A");
             this.volt = powerDataJson.getDouble("V");
-            this.voltAmpere = powerDataJson.getDouble("V");
+            this.voltAmpere = powerDataJson.getDouble("VA");
             this.cosFi = powerDataJson.getDouble("cos");
             this.powerFactor = powerDataJson.getDouble("fp");
-
 
 
         } catch (JSONException e) {
@@ -41,19 +40,19 @@ public class PowerData implements Parcelable {
         }
     }
 
-    public double getWatt () {
+    public double getWatt() {
         return this.watt;
     }
 
-    public double getAmpere () {
+    public double getAmpere() {
         return this.ampere;
     }
 
-    public double getVolt () {
+    public double getVolt() {
         return this.volt;
     }
 
-    public String getWattText () {
+    public String getWattText() {
         decimalFormat.applyLocalizedPattern("###.##0");
         return
                 decimalFormat.format(this.watt);
@@ -83,7 +82,7 @@ public class PowerData implements Parcelable {
                 decimalFormat.format(this.cosFi);
     }
 
-    public String getPowerFactorText () {
+    public String getPowerFactorText() {
         decimalFormat.applyLocalizedPattern("##0");
         return decimalFormat.format(this.powerFactor * 100) + "%";
     }
@@ -118,10 +117,11 @@ public class PowerData implements Parcelable {
         }
 
     };
+
     private PowerData(Parcel in) {
         this.volt = in.readDouble();
         this.ampere = in.readDouble();
-        this.watt= in.readDouble();
+        this.watt = in.readDouble();
         this.voltAmpere = in.readDouble();
         this.cosFi = in.readDouble();
         this.powerFactor = in.readDouble();

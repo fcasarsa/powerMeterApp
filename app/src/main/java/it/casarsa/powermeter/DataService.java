@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.prefs.Preferences;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,12 +32,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -50,13 +56,15 @@ public class DataService extends Service {
     NotificationManager mNotifyMgr;
     NotificationCompat.Builder mBuilder;
     public static String BROADCAST_ACTION = "it.casarsa.powerMeter";
+    SharedPreferences prefs;
+    MediaPlayer mMediaPlayer;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "Service started");
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         new backGroundReceiver().execute();
         // build notification
-
 
 
         return Service.START_STICKY;
@@ -102,7 +110,22 @@ public class DataService extends Service {
 
             if (item.length > 0) {
                 Log.d(TAG, "Background service results" + item[0]);
+
+                int powerLimit = Integer.parseInt(prefs.getString("prefPowerLimit", "3000"));
+                int powerProductionLimit = Integer.parseInt(prefs.getString("prefPowerProduction", "3000"));
+
                 PowerData powerData = new PowerData(item[0]);
+
+                if (powerData.getWatt() > powerLimit) {
+                    powerConsumptionAlert();
+                }
+
+                if (powerData.getWatt() < -powerProductionLimit) {
+                    powerProductionAlert();
+                }
+
+
+
                 intent.putExtra("powerData", powerData);
                 mBuilder.setContentText(powerData.getWattText() + "W ");
                 // Because the ID remains unchanged, the existing notification is
@@ -128,6 +151,41 @@ public class DataService extends Service {
 
         }
 
+    }
+
+    private void powerConsumptionAlert() {
+        String alarm = prefs.getString("prefPowerLimitNotification", null);
+        Log.d(TAG, "Over consumption" + alarm);
+        playSound(getBaseContext(), Uri.parse(alarm));
+    }
+
+    private void powerProductionAlert() {
+        String alarm = prefs.getString("prefPowerProductionNotification", null);
+        Log.d(TAG, "Over production" + alarm);
+        playSound(getBaseContext(), Uri.parse(alarm));
+    }
+
+    private void playSound(Context context, Uri alert) {
+
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+        }
+
+        if (!mMediaPlayer.isPlaying()) {
+            mMediaPlayer.reset();
+            try {
+                mMediaPlayer.setDataSource(context, alert);
+                final AudioManager audioManager = (AudioManager) context
+                        .getSystemService(Context.AUDIO_SERVICE);
+                if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.getLocalizedMessage());
+            }
+        }
     }
 
     private static String getDataFromWebService(String url) throws IOException,
