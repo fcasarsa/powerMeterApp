@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.prefs.Preferences;
 
 import org.apache.http.HttpEntity;
@@ -51,13 +52,13 @@ import android.widget.Toast;
 
 public class DataService extends Service {
 
-    static String TAG ="SERVICE";
+    static String TAG = "SERVICE";
     int mNotificationId = 001;
     NotificationManager mNotifyMgr;
     NotificationCompat.Builder mBuilder;
     public static String BROADCAST_ACTION = "it.casarsa.powerMeter";
     SharedPreferences prefs;
-    MediaPlayer mMediaPlayer;
+    Date lastNotification;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -116,15 +117,15 @@ public class DataService extends Service {
 
                 PowerData powerData = new PowerData(item[0]);
 
-                if (powerData.getWatt() > powerLimit) {
-                    powerConsumptionAlert();
+                if (prefs.getBoolean("prefEnableAlerts", false)) {
+                    if (powerData.getWatt() > powerLimit) {
+                        powerConsumptionAlert();
+                    }
+
+                    if (powerData.getWatt() < -powerProductionLimit) {
+                        powerProductionAlert();
+                    }
                 }
-
-                if (powerData.getWatt() < -powerProductionLimit) {
-                    powerProductionAlert();
-                }
-
-
 
                 intent.putExtra("powerData", powerData);
                 mBuilder.setContentText(powerData.getWattText() + "W ");
@@ -137,7 +138,6 @@ public class DataService extends Service {
                 // no data means error so remove notification
                 mNotifyMgr.cancel(mNotificationId);
             }
-
 
 
             sendBroadcast(intent);
@@ -156,7 +156,9 @@ public class DataService extends Service {
     private void powerConsumptionAlert() {
         String alarm = prefs.getString("prefPowerLimitNotification", null);
         Log.d(TAG, "Over consumption" + alarm);
-        playSound(getBaseContext(), Uri.parse(alarm));
+        if (alarm != null) {
+            playSound(getBaseContext(), Uri.parse(alarm));
+        }
     }
 
     private void powerProductionAlert() {
@@ -166,26 +168,27 @@ public class DataService extends Service {
     }
 
     private void playSound(Context context, Uri alert) {
-
-        if (mMediaPlayer == null) {
-            mMediaPlayer = new MediaPlayer();
+        Date now = new Date();
+        if (lastNotification != null && lastNotification.getTime() > now.getTime() - 20 * 1000) {
+            Log.d(TAG, "skipping");
+            return;
+        } else {
+            lastNotification = new Date();
         }
 
-        if (!mMediaPlayer.isPlaying()) {
-            mMediaPlayer.reset();
-            try {
-                mMediaPlayer.setDataSource(context, alert);
-                final AudioManager audioManager = (AudioManager) context
-                        .getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mMediaPlayer.prepare();
-                    mMediaPlayer.start();
-                }
-            } catch (IOException e) {
-                Log.e(TAG, e.getLocalizedMessage());
+
+        MediaPlayer mMediaPlayer = MediaPlayer.create(this, alert);
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Log.d(TAG, "media completed");
+                mp.release();
+                mp = null;
             }
-        }
+        });
+        mMediaPlayer.start();
+
+
     }
 
     private static String getDataFromWebService(String url) throws IOException,
@@ -256,7 +259,9 @@ public class DataService extends Service {
         mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
-    };
+    }
+
+    ;
 
     @Override
     public void onDestroy() {

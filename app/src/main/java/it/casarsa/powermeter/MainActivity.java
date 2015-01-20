@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.ActionBarActivity;
@@ -22,7 +23,7 @@ import java.text.DecimalFormat;
 
 public class MainActivity extends ActionBarActivity {
 
-    String TAG="powerMeter";
+    String TAG = "powerMeter";
     Intent service;
     IntentFilter screenFilter;
 
@@ -32,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             if (intent.hasExtra("powerData")) {
-            PowerData powerData = extras.getParcelable("powerData");
+                PowerData powerData = extras.getParcelable("powerData");
 
                 ((TextView) findViewById(R.id.textWatt)).setText(powerData.getWattText());
                 ((TextView) findViewById(R.id.textVolt)).setText(powerData.getVoltText());
@@ -40,6 +41,7 @@ public class MainActivity extends ActionBarActivity {
                 ((TextView) findViewById(R.id.textVoltAmpere)).setText(powerData.getVoltAmpereText());
                 ((TextView) findViewById(R.id.textPowerFactor)).setText(powerData.getPowerFactorText());
                 ((TextView) findViewById(R.id.textCosFi)).setText(powerData.getCosFiText());
+
             } else {
                 Toast.makeText(context, "null data", Toast.LENGTH_SHORT).show();
             }
@@ -68,9 +70,10 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        service= new Intent(this, DataService.class);
+        service = new Intent(this, DataService.class);
         startService(service);
         registerReceiver(broadcastReceiver, new IntentFilter(DataService.BROADCAST_ACTION));
 
@@ -85,13 +88,23 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
 
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onPause() {
         super.onPause();  // Always call the superclass method first
-        Log.d(TAG,"onPause");
-        stopService(service);
+        Log.d(TAG, "onPause");
+//        stopService(service);
         unregisterReceiver(broadcastReceiver);
         unregisterReceiver(screenReceiver);
     }
@@ -100,18 +113,29 @@ public class MainActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();  // Always call the superclass method first
         Log.d(TAG, "onResume");
-        startService(service);
+//        startService(service);
         registerReceiver(broadcastReceiver, new IntentFilter(DataService.BROADCAST_ACTION));
         registerReceiver(screenReceiver, new IntentFilter(screenFilter));
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();  // Always call the superclass method first
+        Log.d(TAG, "onStop");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d(TAG, "onBackPressed");
     }
 
     @Override

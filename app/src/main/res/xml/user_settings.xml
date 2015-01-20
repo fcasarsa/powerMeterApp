@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Power alerts">
+    <PreferenceCategory android:title="Alerts">
+        <CheckBoxPreference
+            android:title="Enable alerts"
+            android:key="prefEnableAlerts"
+            android:summary="Check to enable alerts" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Power consumption"
+        android:dependency="prefEnableAlerts">
+
         <EditTextPreference
-            android:title="Power Limit"
-            android:summary="Power consumption limit in W"
+            android:title="Consumption alert"
+            android:summary="Alert when power consumption is over W"
             android:inputType="number"
             android:key="prefPowerLimit" />
         <RingtonePreference
-            android:title="Notification"
-            android:key="prefPowerLimitNotification" />
-
+            android:title="Notification sound"
+            android:key="prefPowerLimitNotification"
+            android:ringtoneType="all" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Power alerts"
+        android:dependency="prefEnableAlerts">
         <EditTextPreference
-            android:title="Power Production"
-            android:summary="Power production is over W"
+            android:title="Production alert"
+            android:summary="Alert when power production is over W"
             android:inputType="number"
             android:key="prefPowerProduction" />
         <RingtonePreference
-            android:title="Notification"
-            android:key="prefPowerProductionNotification" />
-
+            android:title="Notification sound"
+            android:key="prefPowerProductionNotification"
+            android:ringtoneType="all" />
     </PreferenceCategory>
+
 
     <!--
         <PreferenceCategory android:title="Security Settings">
