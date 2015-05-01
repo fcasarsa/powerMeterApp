@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Server Url">
+        <EditTextPreference
+            android:title="URL"
+            android:summary="Server URI"
+            android:inputType="textUri"
+            android:key="prefPowerUrl"
+            android:defaultValue="http://192.168.1.200:3000/pv01"/>
 
+    </PreferenceCategory>
     <PreferenceCategory android:title="Alerts">
         <CheckBoxPreference
             android:title="Enable alerts"

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PowerMeter.iml" filepath="$PROJECT_DIR$/PowerMeter.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powerMeterApp.iml" filepath="$PROJECT_DIR$/powerMeterApp.iml" />
     </modules>
   </component>
 </project>
