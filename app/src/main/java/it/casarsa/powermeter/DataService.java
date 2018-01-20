@@ -86,10 +86,10 @@ public class DataService extends Service {
                         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                         if (mWifi.isConnected()) {
-                            String updatesUrl = prefs.getString("prefPowerUrl", "http://192.168.1.200:3000/pv01");
+                            String updatesUrl = prefs.getString("prefPowerUrl", "http://192.168.1.3:1880/power");
                             String request = getDataFromWebService(updatesUrl);
                             publishProgress(request);
-                            SystemClock.sleep(5000);
+                            SystemClock.sleep(2000);
                         } else {
                             Log.d(TAG, "Wifi is off");
                             publishProgress();
@@ -112,37 +112,10 @@ public class DataService extends Service {
             if (item.length > 0) {
                 Log.d(TAG, "Background service results" + item[0]);
 
-                int powerLimit = Integer.parseInt(prefs.getString("prefPowerLimit", "3000"));
-                int powerProductionLimit = Integer.parseInt(prefs.getString("prefPowerProduction", "3000"));
+                intent.putExtra("powerData", item[0]);
+                sendBroadcast(intent);
 
-                PowerData powerData = new PowerData(item[0]);
-
-                if (prefs.getBoolean("prefEnableAlerts", false)) {
-                    if (powerData.getWatt() > powerLimit) {
-                        powerConsumptionAlert();
-                    }
-
-                    if (powerData.getWatt() < -powerProductionLimit) {
-                        powerProductionAlert();
-                    }
-                }
-
-                intent.putExtra("powerData", powerData);
-                mBuilder.setContentText(powerData.getWattText() + "W ");
-                // Because the ID remains unchanged, the existing notification is
-                // updated.
-                mNotifyMgr.notify(
-                        mNotificationId,
-                        mBuilder.build());
-            } else {
-                // no data means error so remove notification
-                mNotifyMgr.cancel(mNotificationId);
             }
-
-
-            sendBroadcast(intent);
-
-
         }
 
 
@@ -153,43 +126,7 @@ public class DataService extends Service {
 
     }
 
-    private void powerConsumptionAlert() {
-        String alarm = prefs.getString("prefPowerLimitNotification", null);
-        Log.d(TAG, "Over consumption" + alarm);
-        if (alarm != null) {
-            playSound(getBaseContext(), Uri.parse(alarm));
-        }
-    }
 
-    private void powerProductionAlert() {
-        String alarm = prefs.getString("prefPowerProductionNotification", null);
-        Log.d(TAG, "Over production" + alarm);
-        playSound(getBaseContext(), Uri.parse(alarm));
-    }
-
-    private void playSound(Context context, Uri alert) {
-        Date now = new Date();
-        if (lastNotification != null && lastNotification.getTime() > now.getTime() - 20 * 1000) {
-            Log.d(TAG, "skipping");
-            return;
-        } else {
-            lastNotification = new Date();
-        }
-
-
-        MediaPlayer mMediaPlayer = MediaPlayer.create(this, alert);
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                Log.d(TAG, "media completed");
-                mp.release();
-                mp = null;
-            }
-        });
-        mMediaPlayer.start();
-
-
-    }
 
     private static String getDataFromWebService(String url) throws IOException,
             MalformedURLException, JSONException {
@@ -241,6 +178,7 @@ public class DataService extends Service {
     @Override
     public void onCreate() {
         Log.d(TAG, "Service Create");
+/*
         mBuilder =
                 new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.drawable.lightning_icon)
@@ -259,6 +197,7 @@ public class DataService extends Service {
         mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        */
     }
 
     ;
